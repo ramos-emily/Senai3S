@@ -10,7 +10,7 @@ void main() {
     String? name = stdin.readLineSync();
 
     print("Digite a velocidade do motorista: ");
-    int velo = int.parse(stdin.readLineSync()!);
+    double velo = double.parse(stdin.readLineSync()!);
 
     if (velo <= 60) {
       print("Sem infração, ta livre fi");
@@ -30,7 +30,7 @@ void main() {
     print("1 - Pagar à vista (10% desconto)");
     print("2 - Parcelar 2x (sem juros)");
     print("3 - Parcelar 3x (com 10% de juros)");
-    int pay = int.parse(stdin.readLineSync()!);
+    double pay = double.parse(stdin.readLineSync()!);
 
     switch(pay){
       case 1:
