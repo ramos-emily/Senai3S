@@ -1,0 +1,105 @@
+/* estilização principal geral */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #333;
+}
+
+
+
+/* estilização de textos */
+
+.titulo {
+  color: #000;
+  text-align: center;
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+.tituloSecao {
+  color: #000;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5rem;
+}
+
+.sobre {
+  margin-bottom: 3rem;
+}
+
+
+
+/* organização do conteúdo da seção "sobre" */
+
+.conteudoSobre {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .conteudoSobre {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+
+
+/* estilização de imagem e texto da seção "sobre" */
+
+.imagem {
+  max-width: 100%;
+  border-radius: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.textoSobre {
+  flex: 1;
+  line-height: 2;
+}
+
+.textoSobre p {
+  margin-bottom: 4rem;
+  font-size: 1.2rem;
+}
+
+
+
+/* estilização de botões principais */
+
+.botaoPrincipal {
+  display: inline-block;
+  background-color: #000;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.botaoPrincipal:hover,
+.botaoPrincipal:focus {
+  background-color: #333;
+  outline: none;
+}
+
+
+
+/* estilização de seção de destaques */
+
+.destaques {
+  background-color: #f5f5f5;
+  padding: 2rem;
+}
+
+.listaDestaques {
+  list-style-type: disc;
+  padding-left: 3rem;
+  line-height: 2;
+  font-size: 1.2rem;
+}
