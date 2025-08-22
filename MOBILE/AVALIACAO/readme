@@ -1,0 +1,158 @@
+Comparação de Estruturas: Dart x Python
+
+
+
+    Funções
+
+Dart
+
+String lerEntrada(String mensagem) {
+  return mensagem;
+}
+
+
+Python
+
+def ler_entrada(mensagem: str) -> str:
+    return mensagem
+
+
+
+    Entrada de dados
+
+Dart
+
+String? name = stdin.readLineSync();
+
+
+Python
+
+name = input("Digite seu nome: ")
+
+
+
+    Lista de Mapas (List + Dict)
+
+Dart
+
+List<Map<String, dynamic>> produtos = [
+  {"nome": "Camisa", "preco": 5.0, "estoque": 10},
+];
+
+
+Python
+
+produtos = [
+  {"nome": "Camisa", "preco": 5.0, "estoque": 10},
+]
+
+
+
+    Loop for
+
+Dart
+
+for (int i = 0; i < produtos.length; i++) {
+  print(produtos[i]["nome"]);
+}
+
+
+Python
+
+for i in range(len(produtos)):
+    print(produtos[i]["nome"])
+
+
+
+    Loop while
+
+Dart
+
+while (valor == null) {
+  print("Valor inválido!");
+}
+
+
+Python
+
+while valor is None:
+    print("Valor inválido!")
+
+
+
+    Condicionais
+
+Dart
+
+if (pag == 1) {
+  print("Dinheiro");
+} else if (pag == 2) {
+  print("Débito");
+} else {
+  print("Outro");
+}
+
+
+Python
+
+if pag == 1:
+    print("Dinheiro")
+elif pag == 2:
+    print("Débito")
+else:
+    print("Outro")
+
+
+
+    Interpolação de Strings
+
+Dart
+
+print("Cliente: $name");
+
+
+Python
+
+print(f"Cliente: {name}")
+
+
+
+
+    Null / None
+
+Dart
+
+String? nome = null;
+
+
+Python
+
+nome = None
+
+
+
+
+    Operações Matemáticas
+
+Dart
+
+subtotal += item["preco"] * item["quantidade"];
+
+
+Python
+
+subtotal += item["preco"] * item["quantidade"]
+
+
+
+
+    Booleanos
+
+Dart
+
+bool continuar = true;
+
+
+Python
+
+continuar = True
