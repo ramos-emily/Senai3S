@@ -1,53 +1,62 @@
 import { useForm } from "react-hook-form";
-import {z} from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 
-const schemaRegister = z.object({
-    nome: z.string()
-        .min(1, 'Preencha o campo de nome, por favor')
-        .max(30, 'Máximo de 30 caracteres'),
+// Validação com Zod
+const schemaUsuario = z.object({
+  nome: z
+    .string()
+    .min(1, "Preencha o campo de nome")
+    .max(50, "Máximo de 50 caracteres"),
+  email: z
+    .string()
+    .min(1, "Preencha o campo de email")
+    .max(100, "Máximo de 100 caracteres")
+    .email("Insira um email válido"),
+});
 
-    email: z.string()
-        .min(1, 'Preencha o campo de email, por favor')
-        .max(50, 'Máximo de 50 caracteres')
-        .email('Insira um email válido'),
-    });
+export function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(schemaUsuario),
+  });
 
-export function Register(){
+  async function cadastrarUsuario(data) {
+    console.log("Dados inseridos", data);
 
-    const{
-        register, //registra oq foi digitado
-        handlesubmit, // no momento do envio
-        formStatus: {errors}, // se der ruim guarda no errors
-        reset //limpa o form
-    } = useForm({resolver: zodResolver(schemaRegister)})
-
-    async function obterDados(data) {
-        console.log("Dados inseridos", data)
-
-        try{
-            await axios.post('http://127.0.0.1:8000/usuario/', data);
-            alert("Usuario cadastrado com sucesso!!");
-            reset();
-        }catch(errors){
-            alert("Nao deu certo, faz dnv", errors);
-            console.error(errors)
-        }
+    try {
+      await axios.post("http://127.0.0.1:8000/usuarios/", data);
+      alert("Usuário registrado com sucesso!");
+      reset();
+    } catch (error) {
+      console.error(error);
+      if (error.response) {
+        // Erro vindo do backend
+        alert(`Erro ao registrar: ${JSON.stringify(error.response.data)}`);
+      } else {
+        alert("Erro de conexão com o servidor");
+      }
     }
+  }
 
-    return(
-        <form className="form" onSubmit={handlesubmit(obterDados)}>
-            <header>Cadastro de usuário</header>
-            <label>Name:</label>
-            <input type="text" placeholder="Gaibriel Bosco" {...register('nome')}/>
-            {errors.nome && <p>{errors.nome.message}</p>}
+  return (
+    <form className="form" onSubmit={handleSubmit(cadastrarUsuario)}>
+      <header>Cadastro de Usuário</header>
 
-            <label>E-mail:</label>
-            <input type="email" placeholder="email@dominio.com.br" {...register('email')}/>
-            {errors.email && <p>{errors.email.message}</p>}
+      <label>Nome:</label>
+      <input type="text" placeholder="Emily Ramos" {...register("nome")} />
+      {errors.nome && <p style={{ color: "red" }}>{errors.nome.message}</p>}
 
-            <button type="submit">Cadastrar</button>
-        </form>
-    )
+      <label>E-mail:</label>
+      <input type="email" placeholder="email@dominio.com.br" {...register("email")} />
+      {errors.email && <p style={{ color: "red" }}>{errors.email.message}</p>}
+
+      <button type="submit">Registrar</button>
+    </form>
+  );
 }

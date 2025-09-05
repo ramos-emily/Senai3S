@@ -5,7 +5,7 @@ from .models import Tarefa, Usuarios
 class UsuariosSerializes(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
-        fields = ['idUsuario', 'nome', 'email']
+        fields = ['nome', 'email']
 
 class TarefaSerializes(serializers.ModelSerializer):
     class Meta:
