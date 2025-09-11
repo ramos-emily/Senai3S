@@ -30,6 +30,7 @@ function Home() {
             </Link>
           </div>
         </div>
+        <h1>So qualquer coisa aqui pra commitar e fingir que eu codo na gravação da GS</h1>
       </section>
       
       {/* seção sobre os destaques da carreira */}
