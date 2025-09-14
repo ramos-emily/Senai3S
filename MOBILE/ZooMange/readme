@@ -1,0 +1,117 @@
+# Sistema de Gestão de Animais - ZOOMANGE
+
+Este projeto foi desenvolvido como parte da avaliação de **Programação Orientada a Objetos**.  
+O objetivo é gerenciar os animais do zoológico **ZOOMANGE**, permitindo:
+
+- Cadastrar novos animais  
+- Listar todos os animais cadastrados  
+- Editar dados de um animal existente  
+- Remover animais  
+- Filtrar por porte (pequeno, médio, grande)  
+- Gerar um relatório simples (por espécie e porte)  
+
+## Como executar
+
+1. Certifique-se de ter o [Dart SDK] instalado.  
+2. Salve o código no arquivo `zoo.dart`.  
+3. Abra o terminal na pasta do arquivo e rode:  
+
+📚 Estrutura do código
+Classe base
+Animal (classe abstrata)
+
+Atributos:
+
+_name (privado → encapsulamento)
+
+size (porte)
+
+Métodos abstratos:
+
+emitirSom()
+
+alimentar()
+
+Subclasses
+Dog → atributo extra breed (raça)
+
+Cat → atributo extra color (cor)
+
+Elephant → atributo extra weight (peso)
+
+Cada subclasse sobrescreve os métodos emitirSom() e alimentar() → polimorfismo.
+
+Funcionalidades (CRUD + filtros + relatório)
+cadastrarAnimal() → adiciona um novo animal
+
+listarAnimais() → exibe todos os animais cadastrados
+
+editarAnimal() → permite alterar dados de um animal
+
+removerAnimal() → exclui um animal
+
+filtrarPorPorte() → mostra animais de um porte específico
+
+gerarRelatorio() → relatório com contagem por espécie e por porte
+
+📊 Exemplo de uso
+Entrada (usuário):
+
+===== Sistema de Gestão ZOOMANGE =====
+1 - Cadastrar animal
+2 - Listar animais
+3 - Editar animal
+4 - Remover animal
+5 - Filtrar por porte
+6 - Gerar relatório
+0 - Sair
+Escolha uma opção: 1
+Digite o nome do animal:
+Rex
+Digite o porte do animal (pequeno/médio/grande):
+médio
+Escolha a espécie: 1 - Cachorro, 2 - Gato, 3 - Elefante
+1
+Digite a raça do cachorro (opcional):
+Pastor Alemão
+Animal cadastrado com sucesso!
+Entrada (outros animais):
+
+Escolha uma opção: 1
+Digite o nome do animal:
+Mimi
+Digite o porte do animal (pequeno/médio/grande):
+pequeno
+Escolha a espécie: 2
+Digite a cor do gato (opcional):
+Branco
+Animal cadastrado com sucesso!
+
+Escolha uma opção: 1
+Digite o nome do animal:
+Dumbo
+Digite o porte do animal (pequeno/médio/grande):
+grande
+Escolha a espécie: 3
+Digite o peso do elefante (opcional):
+4500
+Animal cadastrado com sucesso!
+Saída (listar animais):
+less
+
+0 - Rex (Dog, Porte: médio)
+1 - Mimi (Cat, Porte: pequeno)
+2 - Dumbo (Elephant, Porte: grande)
+Saída (gerar relatório):
+makefile
+
+===== Relatório de Animais =====
+Por espécie:
+Dog: 1
+Cat: 1
+Elephant: 1
+
+Por porte:
+médio: 1
+pequeno: 1
+grande: 1
