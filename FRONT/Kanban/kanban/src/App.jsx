@@ -1,16 +1,14 @@
-import { Header } from "./Components/header"
-import {NavBar} from "./Components/NavBar"
-import { Login } from "./pages/Login"
-import { Register } from "./pages/Register"
+import { BrowserRouter } from "react-router-dom"
+import { Rotas } from "./Rotas/Rotas";
+import "./App.css";
 
+//permite a navegação na aplicação, mexendo até o endereçamento
 function App() {
+
   return (
-    <div>
-      <NavBar/>
-      <Header/>
-      <Register/>
-      <Login/>
-    </div>
+   <BrowserRouter>
+      <Rotas/>
+   </BrowserRouter>
   )
 }
 
