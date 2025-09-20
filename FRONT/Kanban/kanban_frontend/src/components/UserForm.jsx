@@ -1,13 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm } from "react-hook-form";
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userService } from '../services/api';
 import '../styles/main.scss';
 
+// Regex: apenas letras (com acentos) e espaços simples entre nomes
+const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?: [A-Za-zÀ-ÖØ-öø-ÿ]+)*$/;
+
 const userSchema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
+  nome: z
+    .string()
+    .min(1, 'Nome é obrigatório')
+    .max(30, 'Nome deve ter no máximo 30 caracteres')
+    .regex(nomeRegex, 'O nome deve conter apenas letras e espaços válidos'),
+  email: z
+    .string()
+    .min(1, 'Email é obrigatório')
+    .email('Formato de email inválido'),
 });
 
 const UserForm = () => {
@@ -22,7 +32,7 @@ const UserForm = () => {
       reset();
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
-      alert('Erro ao cadastrar usuário');
+      alert('Erro ao cadastrar usuário, email ja existe');
     }
   };
 
@@ -30,17 +40,22 @@ const UserForm = () => {
     <div className="user-form">
       <h2 className="user-form__title">Cadastro de Usuário</h2>
       <form className="user-form__form" onSubmit={handleSubmit(onSubmit)}>
+        
+        {/* Campo Nome */}
         <div className="user-form__field">
           <label htmlFor="nome" className="user-form__label">Nome</label>
           <input 
             type="text" 
             id="nome" 
+            maxLength={30}
             className={`user-form__input ${errors.nome ? 'error' : ''}`}
             {...register('nome')}
           />
+          <small className="user-form__hint">Máx. 30 caracteres</small>
           {errors.nome && <span className="user-form__error">{errors.nome.message}</span>}
         </div>
         
+        {/* Campo Email */}
         <div className="user-form__field">
           <label htmlFor="email" className="user-form__label">Email</label>
           <input 
