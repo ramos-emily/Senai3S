@@ -22,18 +22,33 @@ import TaskForm from './TaskForm';
 import { taskService } from '../services/api';
 import '../styles/main.scss';
 
-// Componente DroppableColumn
+// Componente DroppableColumn redesenhado
 const DroppableColumn = ({ id, title, tasks, onEdit, onDelete }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: id,
   });
 
+  const getColumnTheme = (columnId) => {
+    switch(columnId) {
+      case 'a_fazer': return { bg: '#FFF3E0'};
+      case 'fazendo': return { bg: '#E8F5E9'};
+      case 'pronto': return { bg: '#E3F2FD'};
+      default: return { bg: '#F5F5F6'};
+    }
+  };
+
+  const theme = getColumnTheme(id);
+
   return (
-    <div className="task-board__column">
-      <h3 className="task-board__column-title">{title}</h3>
+    <div className="kanban-column" style={{ borderColor: theme.border }}>
+      <div className="kanban-column__header">
+        <h3 className="kanban-column__title">{title}</h3>
+      </div>
+      
       <div 
         ref={setNodeRef}
-        className={`task-board__tasks ${isOver ? 'task-board__tasks--over' : ''}`}
+        className={`kanban-column__tasks ${isOver ? 'kanban-column__tasks--over' : ''}`}
+        style={{ backgroundColor: theme.bg }}
         id={id}
       >
         <SortableContext 
@@ -49,12 +64,18 @@ const DroppableColumn = ({ id, title, tasks, onEdit, onDelete }) => {
             />
           ))}
         </SortableContext>
+        
+        {tasks.length === 0 && (
+          <div className="kanban-column__empty">
+            <span>Nenhuma tarefa aqui</span>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-// Componente SortableTask
+// Componente SortableTask completamente redesenhado
 const SortableTask = ({ task, onEdit, onDelete }) => {
   const {
     attributes,
@@ -68,8 +89,14 @@ const SortableTask = ({ task, onEdit, onDelete }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: isDragging ? 'none' : transition,
-    opacity: isDragging ? 0.8 : 1,
-    scale: isDragging ? 0.95 : 1,
+    opacity: isDragging ? 0.6 : 1,
+    scale: isDragging ? 1.02 : 1,
+  };
+
+
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   return (
@@ -80,80 +107,116 @@ const SortableTask = ({ task, onEdit, onDelete }) => {
       {...attributes}
       {...listeners}
     >
-      <div className="task-card__content">
-        <p className="task-card__description">{task.descricao}</p>
-        <div className="task-card__details">
-          <span className="task-card__detail">Setor: {task.setor}</span>
-          <span className={`task-card__priority task-card__priority--${task.prioridade}`}>
-            Prioridade: {task.prioridade}
-          </span>
-          <span className="task-card__detail">Vinculado a: {task.usuario_object?.nome}</span>
-          <span className="task-card__status">Status: {getStatusLabel(task.status)}</span>
+      <div className="task-card__header">
+        <div className="task-card__priority" style={{ backgroundColor: getPriorityColor(task.prioridade) }}>
+          {task.prioridade}
+        </div>
+        <div className="task-card__actions">
+          <button 
+            className="task-card__btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(task);
+            }}
+            title="Editar tarefa"
+          >
+            Editar
+          </button>
+          <button 
+            className="task-card__btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(task);
+            }}
+            title="Excluir tarefa"
+          >
+            Excluir
+          </button>
         </div>
       </div>
-      <div className="task-card__actions">
-        <button 
-          className="task-card__btn task-card__btn--edit"
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit(task);
-          }}
-        >
-          Editar
-        </button>
-        <button 
-          className="task-card__btn task-card__btn--delete"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(task);
-          }}
-        >
-          Excluir
-        </button>
+      
+      <div className="task-card__content">
+        <p className="task-card__description">{task.descricao}</p>
+        
+        <div className="task-card__meta">
+          <div className="task-card__meta-item">
+            <span className="task-card__meta-label">Setor</span>
+            <span className="task-card__meta-value">{task.setor}</span>
+          </div>
+          
+          <div className="task-card__meta-item">
+            <span className="task-card__meta-label">Responsável</span>
+            <span className="task-card__meta-value">{task.usuario_object?.nome || 'Não atribuído'}</span>
+          </div>
+          
+          {task.data_limite && (
+            <div className="task-card__meta-item">
+              <span className="task-card__meta-label">Prazo</span>
+              <span className="task-card__meta-value">{formatDate(task.data_limite)}</span>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <div className="task-card__footer">
+        <span className="task-card__status">{getStatusLabel(task.status)}</span>
+        {task.data_criacao && (
+          <span className="task-card__date">Criado em {formatDate(task.data_criacao)}</span>
+        )}
       </div>
     </div>
   );
 };
 
-// Função auxiliar para mostrar o status em português
-const getStatusLabel = (status) => {
-  const statusLabels = {
-    'a_fazer': 'A Fazer',
-    'fazendo': 'Fazendo',
-    'pronto': 'Pronto'
-  };
-  return statusLabels[status] || status;
-};
-
 // Componente TaskCard para o overlay de arrasto
 const TaskCardOverlay = ({ task }) => (
-  <div className="task-card task-card--dragging">
+  <div className="task-card task-card--dragging task-card--overlay">
+    <div className="task-card__header">
+      <div className="task-card__priority" style={{ 
+        backgroundColor: getPriorityColor(task.prioridade) 
+      }}>
+        {task.prioridade}
+      </div>
+    </div>
     <div className="task-card__content">
       <p className="task-card__description">{task.descricao}</p>
-      <div className="task-card__details">
-        <span className="task-card__detail">Setor: {task.setor}</span>
-        <span className={`task-card__priority task-card__priority--${task.prioridade}`}>
-          Prioridade: {task.prioridade}
-        </span>
-        <span className="task-card__detail">Vinculado a: {task.usuario_object?.nome}</span>
-        <span className="task-card__status">Status: {getStatusLabel(task.status)}</span>
-      </div>
     </div>
   </div>
 );
 
-// Componente principal TaskBoard
+// Função auxiliar para mostrar o status em português
+const getStatusLabel = (status) => {
+  const statusLabels = {
+    'a_fazer': 'A Fazer',
+    'fazendo': 'Em Andamento',
+    'pronto': 'Concluído'
+  };
+  return statusLabels[status] || status;
+};
+
+const getPriorityColor = (priority) => {
+  switch(priority) {
+    case 'alta': return '#D32F2F';
+    case 'media': return '#FFA000';
+    case 'baixa': return '#4CAF50';
+    default: return '#757575';
+  }
+};
+
+// Componente principal TaskBoard completamente redesenhado
 const TaskBoard = () => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Configuração dos sensores
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px de movimento antes de iniciar o drag
+        distance: 5,
       },
     }),
     useSensor(KeyboardSensor)
@@ -178,7 +241,7 @@ const TaskBoard = () => {
   };
 
   const handleDelete = async (task) => {
-    if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
+    if (window.confirm(`Tem certeza que deseja excluir a tarefa "${task.descricao}"?`)) {
       try {
         await taskService.delete(task.id);
         fetchTasks();
@@ -208,12 +271,9 @@ const TaskBoard = () => {
 
     const taskId = active.id;
     const newStatus = over.id.toString();
-
-    // Verifica se o destino é uma das colunas válidas
     const validStatuses = ['a_fazer', 'fazendo', 'pronto'];
     
     if (validStatuses.includes(newStatus)) {
-      // Mudança de coluna (status)
       try {
         const taskToUpdate = tasks.find(task => task.id === taskId);
         if (taskToUpdate && taskToUpdate.status !== newStatus) {
@@ -224,14 +284,31 @@ const TaskBoard = () => {
           fetchTasks();
         }
       } catch (error) {
-        console.error('Erro ao atualizar status via drag and drop:', error);
+        console.error('Erro ao atualizar status:', error);
       }
-    } else {
-      // Reordenamento dentro da mesma coluna
-      // Neste caso, não precisamos fazer nada no backend já que é apenas reordenamento visual
-      // Mas podemos atualizar o estado local se quisermos
     }
   };
+
+  // Filtrar tarefas baseado no filtro e busca
+  const filteredTasks = tasks.filter(task => {
+    const matchesFilter = filter === 'all' || task.prioridade === filter;
+    const matchesSearch = task.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         task.setor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (task.usuario_object?.nome || '').toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  const tasksByStatus = {
+    a_fazer: filteredTasks.filter(task => task.status === 'a_fazer'),
+    fazendo: filteredTasks.filter(task => task.status === 'fazendo'),
+    pronto: filteredTasks.filter(task => task.status === 'pronto')
+  };
+
+  const columns = [
+    { id: 'a_fazer', title: 'A Fazer', tasks: tasksByStatus.a_fazer },
+    { id: 'fazendo', title: 'Em Andamento', tasks: tasksByStatus.fazendo },
+    { id: 'pronto', title: 'Concluído', tasks: tasksByStatus.pronto }
+  ];
 
   if (showForm) {
     return (
@@ -242,29 +319,43 @@ const TaskBoard = () => {
     );
   }
 
-  const tasksByStatus = {
-    a_fazer: tasks.filter(task => task.status === 'a_fazer'),
-    fazendo: tasks.filter(task => task.status === 'fazendo'),
-    pronto: tasks.filter(task => task.status === 'pronto')
-  };
-
-  const columns = [
-    { id: 'a_fazer', title: 'A Fazer', tasks: tasksByStatus.a_fazer },
-    { id: 'fazendo', title: 'Fazendo', tasks: tasksByStatus.fazendo },
-    { id: 'pronto', title: 'Pronto', tasks: tasksByStatus.pronto }
-  ];
-
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="task-board">
-        <h2 className="task-board__title">Quadro de Tarefas</h2>
-        
-        <div className="task-board__columns">
+    <div className="kanban-container">
+      {/* Header do Kanban */}
+      <div className="kanban-header">
+        <div className="kanban-header__left">
+          <h1 className="kanban-header__title"> Quadro de Tarefas</h1>
+        </div>
+      </div>
+
+      {/* Estatísticas */}
+      <div className="kanban-stats">
+        <div className="stat-card">
+          <span className="stat-card__number">{tasks.length}</span>
+          <span className="stat-card__label">Total</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-card__number">{tasksByStatus.a_fazer.length}</span>
+          <span className="stat-card__label">A Fazer</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-card__number">{tasksByStatus.fazendo.length}</span>
+          <span className="stat-card__label">Em Andamento</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-card__number">{tasksByStatus.pronto.length}</span>
+          <span className="stat-card__label">Concluídas</span>
+        </div>
+      </div>
+
+      {/* Quadro Kanban */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="kanban-board">
           {columns.map(column => (
             <DroppableColumn
               key={column.id}
@@ -276,14 +367,14 @@ const TaskBoard = () => {
             />
           ))}
         </div>
-      </div>
 
-      <DragOverlay adjustScale={false}>
-        {activeTask ? (
-          <TaskCardOverlay task={activeTask} />
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+        <DragOverlay adjustScale={false}>
+          {activeTask ? (
+            <TaskCardOverlay task={activeTask} />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 };
 

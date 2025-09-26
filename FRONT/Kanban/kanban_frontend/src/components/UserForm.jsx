@@ -45,6 +45,7 @@ const UserForm = () => {
         <div className="user-form__field">
           <label htmlFor="nome" className="user-form__label">Nome</label>
           <input 
+            placeholder='emily'
             type="text" 
             id="nome" 
             maxLength={30}
@@ -59,6 +60,7 @@ const UserForm = () => {
         <div className="user-form__field">
           <label htmlFor="email" className="user-form__label">Email</label>
           <input 
+            placeholder='emilyramos@gmail.com'
             type="email" 
             id="email" 
             className={`user-form__input ${errors.email ? 'error' : ''}`}

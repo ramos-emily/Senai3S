@@ -32,7 +32,7 @@ $font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica
   background: linear-gradient(135deg, $primary-green 0%, $green-light 100%);
 }
 
-// Estilos globais
+// Reset e estilos globais
 * {
   margin: 0;
   padding: 0;
@@ -47,6 +47,7 @@ body {
   min-height: 100vh;
 }
 
+// Estilos existentes mantidos para compatibilidade
 .task-card {
   cursor: grab;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -66,11 +67,9 @@ body {
 .task-board__tasks {
   min-height: 100px;
   padding: 10px;
-  border-radius: 8px;
   background-color: #f8f9fa;
 }
 
-// Melhorar a experiência de arrasto
 [aria-roledescription="sortable"] {
   outline: none;
 }
@@ -116,7 +115,6 @@ body {
       border: 2px solid rgba(255, 255, 255, 0.2);
       color: $white;
       padding: 0.75rem 1.5rem;
-      
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: 600;
@@ -137,7 +135,6 @@ body {
   margin: 2rem auto;
   background: $white;
   padding: 2.5rem;
-  
   @include card-shadow;
   
   &__title {
@@ -169,7 +166,6 @@ body {
   &__input, &__select, &__textarea {
     padding: 1rem 1.25rem;
     border: 2px solid $gray-medium;
-    
     font-family: $font-family;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -203,7 +199,6 @@ body {
     color: $white;
     border: none;
     padding: 1rem 2rem;
-    
     cursor: pointer;
     font-weight: 600;
     font-size: 1.1rem;
@@ -216,145 +211,455 @@ body {
   }
 }
 
-// Task Board melhorado
-.task-board {
-  &__title {
-    margin-bottom: 2rem;
-    color: $primary-green;
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-  }
-  
-  &__columns {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-  
-  &__column {
-    background: $white;
-    padding: 1.5rem;
-    
-    @include card-shadow;
-    
-    &-title {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 3px solid;
-      font-size: 1.3rem;
-      font-weight: 700;
-      text-align: center;
-      
-      &:first-child { border-color: $accent-amber; color: $accent-amber; }
-      &:nth-child(2) { border-color: $primary-green; color: $primary-green; }
-      &:last-child { border-color: $green-light; color: $green-light; }
-    }
-  }
-  
-  &__tasks {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
+// NOVO LAYOUT KANBAN - Design Moderno
+.kanban-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-// Task Card para incluir efeito do kanban de arrastar
-.task-card {
-  background: $white;
-  padding: 1.5rem;
-  @include card-shadow;
-  @include hover-effect;
-  border-left: 4px solid;
-  
-  &--baixa { border-left-color: $green-light; }
-  &--media { border-left-color: $accent-amber; }
-  &--alta { border-left-color: $accent-red; }
-  
-  &__content {
-    margin-bottom: 1.25rem;
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 2rem;
+
+  &__left {
+    flex: 1;
   }
-  
-  &__description {
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: $black;
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $primary-green;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtitle {
+    color: $gray-dark;
     font-size: 1.1rem;
-    line-height: 1.4;
   }
-  
-  &__details {
+
+  &__right {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.9rem;
+    gap: 1rem;
+    align-items: flex-end;
   }
-  
-  &__detail {
-    color: $gray-dark;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+
+  &__search-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid $gray-medium;
+
+    width: 300px;
+    font-family: $font-family;
+    transition: all 0.3s ease;
     
-    &::before {
-      content: "•";
-      color: $primary-green;
-      font-weight: bold;
+    &:focus {
+      outline: none;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
     }
   }
-  
-  &__priority {
-    font-weight: 600;
-    
-    &--baixa { color: $green-light; }
-    &--media { color: $accent-amber; }
-    &--alta { color: $accent-red; }
-  }
-  
-  &__actions {
+
+  &__filters {
     display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    gap: 1rem;
     align-items: center;
   }
-  
-  &__status-select {
-    padding: 0.5rem;
+
+  &__filter-select {
+    padding: 0.75rem 1rem;
     border: 2px solid $gray-medium;
-    flex: 1;
-    background: $gray-light;
-    font-size: 0.9rem;
+
+    background: $white;
+    font-family: $font-family;
+    transition: all 0.3s ease;
     
     &:focus {
       outline: none;
       border-color: $primary-green;
     }
   }
-  
-  &__btn {
-    padding: 0.5rem 1rem;
+
+  &__add-btn {
+    @include gradient-bg;
+    color: $white;
     border: none;
-    cursor: pointer;
-    font-size: 0.85rem;
+    padding: 0.75rem 1.5rem;
+
     font-weight: 600;
-    transition: all 0.2s ease;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    @include hover-effect;
+
+    &:hover {
+      background: linear-gradient(135deg, $green-dark 0%, $primary-green 100%);
+    }
+  }
+}
+
+.kanban-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: $white;
+  padding: 1.5rem;
+  text-align: center;
+  @include card-shadow;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.2);
+  }
+
+  &__number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $primary-green;
+    margin-bottom: 0.5rem;
+  }
+
+  &__label {
+    color: $gray-dark;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.kanban-column {
+  border-top: 4px solid;
+  background: $white;
+  @include card-shadow;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.2);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid $gray-light;
+  }
+
+  &__icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $gray-light;
+
+  }
+
+  &__title {
+    flex: 1;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $black;
+    margin: 0;
+  }
+
+  &__count {
+    background: $gray-light;
+    color: $gray-dark;
+    padding: 0.25rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  &__tasks {
+    padding: 1rem;
+    min-height: 500px;
+    transition: all 0.3s ease;
+
+    &--over {
+      background: rgba(76, 175, 80, 0.1) !important;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    color: $gray-dark;
+    padding: 3rem 1rem;
+    font-style: italic;
+    background: rgba($gray-light, 0.5);
+
+    margin: 1rem;
+  }
+}
+
+.task-card {
+  background: $white;
+  margin-bottom: 1rem;
+  @include card-shadow;
+  cursor: grab;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  &--dragging {
+    opacity: 0.6;
+    transform: rotate(3deg) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  &--overlay {
+    transform: rotate(5deg) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  &__priority {
+    color: $white;
+    padding: 0.25rem 0.75rem;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
     
-    &--edit {
-      background-color: $accent-amber;
-      color: $white;
-      
-      &:hover {
-        background-color: darken($accent-amber, 10%);
-      }
+    &--baixa { background-color: $green-light; }
+    &--media { background-color: $accent-amber; }
+    &--alta { background-color: $accent-red; }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+
+    &:hover {
+      background: $gray-light;
+      transform: scale(1.1);
+    }
+
+    &--edit:hover {
+      color: $accent-amber;
+      background: rgba($accent-amber, 0.1);
+    }
+
+    &--delete:hover {
+      color: $accent-red;
+      background: rgba($accent-red, 0.1);
+    }
+  }
+
+  &__content {
+    padding: 0 1rem;
+  }
+
+  &__description {
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    color: $black;
+    font-size: 1rem;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__meta-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__meta-label {
+    font-size: 0.8rem;
+    color: $gray-dark;
+    font-weight: 500;
+  }
+
+  &__meta-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $black;
+    text-align: right;
+    max-width: 60%;
+    word-break: break-word;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid $gray-light;
+    font-size: 0.8rem;
+    background: $gray-light;
+  }
+
+  &__status {
+    font-weight: 600;
+    color: $primary-green;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+
+  &__date {
+    color: $gray-dark;
+    font-size: 0.75rem;
+  }
+}
+
+// Responsividade
+@media (max-width: 1200px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .kanban-header {
+    flex-direction: column;
+    
+    &__right {
+      align-items: stretch;
+      width: 100%;
     }
     
-    &--delete {
-      background-color: $accent-red;
-      color: $white;
-      
-      &:hover {
-        background-color: darken($accent-red, 10%);
-      }
+    &__search-input {
+      width: 100%;
+    }
+  }
+  
+  .kanban-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .kanban-container {
+    padding: 1rem;
+  }
+  
+  .kanban-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .kanban-header__filters {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+    
+    &__number {
+      font-size: 2rem;
+    }
+  }
+  
+  .kanban-header__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .kanban-container {
+    padding: 0.5rem;
+  }
+  
+  .task-card {
+    &__meta-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+    
+    &__meta-value {
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+}
+
+// Animações suaves
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kanban-column, .task-card, .stat-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+// Estados de foco para acessibilidade
+.task-card:focus {
+  outline: 2px solid $primary-green;
+  outline-offset: 2px;
+}
+
+
+// Scrollbar customizada
+.kanban-column__tasks {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $gray-light;
+
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $gray-medium;
+
+    
+    &:hover {
+      background: $gray-dark;
     }
   }
 }
