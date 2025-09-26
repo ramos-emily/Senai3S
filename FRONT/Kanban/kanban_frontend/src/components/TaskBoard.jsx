@@ -75,7 +75,7 @@ const DroppableColumn = ({ id, title, tasks, onEdit, onDelete }) => {
   );
 };
 
-// Componente SortableTask completamente redesenhado
+
 const SortableTask = ({ task, onEdit, onDelete }) => {
   const {
     attributes,
@@ -203,7 +203,7 @@ const getPriorityColor = (priority) => {
   }
 };
 
-// Componente principal TaskBoard completamente redesenhado
+
 const TaskBoard = () => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
@@ -212,7 +212,7 @@ const TaskBoard = () => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Configuração dos sensores
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -289,7 +289,7 @@ const TaskBoard = () => {
     }
   };
 
-  // Filtrar tarefas baseado no filtro e busca
+
   const filteredTasks = tasks.filter(task => {
     const matchesFilter = filter === 'all' || task.prioridade === filter;
     const matchesSearch = task.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
