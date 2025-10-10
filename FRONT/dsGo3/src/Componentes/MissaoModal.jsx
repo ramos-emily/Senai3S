@@ -19,8 +19,6 @@ export function MissaoModal({ missao, onClose, onConcluir }) {
     ) {
       setResultado("Resposta correta! Parabéns!");
       setStatus("sucesso");
-
-      // ✅ chama a função de concluir após 1s (tempo para mostrar feedback)
       setTimeout(() => {
         onConcluir(missao.id);
       }, 1000);
@@ -31,14 +29,22 @@ export function MissaoModal({ missao, onClose, onConcluir }) {
   };
 
   return (
-    <dialog open className="modal">
+    <dialog 
+      open 
+      className="modal" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="titulo-missao" 
+      aria-describedby="descricao-missao"
+    >
       <h2 className="titulo" id="titulo-missao">
         {missao.titulo}
       </h2>
+
       <p id="descricao-missao">{missao.descricao}</p>
 
       <label htmlFor="resposta" className="sr-only">
-        Digite sua resposta
+        Resposta da missão
       </label>
       <input
         className="caixaTexto"
@@ -48,6 +54,7 @@ export function MissaoModal({ missao, onClose, onConcluir }) {
         value={resposta}
         onChange={(e) => setResposta(e.target.value)}
         required
+        aria-required="true"
       />
 
       <div className="modal-botoes">
@@ -56,7 +63,11 @@ export function MissaoModal({ missao, onClose, onConcluir }) {
       </div>
 
       {resultado && (
-        <div className="resultado">
+        <div 
+          className="resultado" 
+          role="status" 
+          aria-live="polite"
+        >
           <p>{resultado}</p>
           {status === "sucesso" && (
             <img
@@ -68,7 +79,7 @@ export function MissaoModal({ missao, onClose, onConcluir }) {
           {status === "erro" && (
             <img
               src={erro}
-              alt="Erro na resposta da missão"
+              alt="Resposta incorreta"
               width="100"
             />
           )}

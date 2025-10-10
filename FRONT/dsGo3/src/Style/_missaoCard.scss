@@ -1,24 +1,37 @@
 @use './variaveis' as *;
 
 .conteiner {
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  background: radial-gradient(circle at top, #1b0034 0%, #090011 100%);
   padding: 3rem 2rem;
   border-radius: 20px;
-  color: #dfcaf9;
+  color: #e3d9ff;
   max-width: 1200px;
   margin: 2rem auto 7rem auto;
   overflow-y: auto;
   max-height: 80vh;
+  position: relative;
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+  backdrop-filter: blur(12px);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.4;
+    pointer-events: none;
+    border-radius: 20px;
+  }
+
   scrollbar-width: thin;
-  scrollbar-color: $destaque-rosa;
+  scrollbar-color: $destaque-rosa transparent;
 
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $destaque-rosa;
+    background: linear-gradient(180deg, $destaque-rosa, #8a2be2);
     border-radius: 10px;
   }
 
@@ -29,9 +42,11 @@
 
 .conteiner h2 {
   text-align: center;
-  margin-bottom: 1rem;
-  font-size: 2rem;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 0 8px #331b44, 0 0 16px #3e2258;
 }
 
 .missoes-grid {
@@ -41,43 +56,59 @@
 }
 
 .missao-card {
-  background-color: $card;
-  color: #222;
-  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(25, 0, 52, 0.8), rgba(70, 0, 120, 0.6));
+  border: 1px solid rgba(180, 75, 255, 0.5);
+  border-radius: 20px;
+  color: #e7d6ff;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   padding: 1.5rem;
   min-height: 220px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 18px;
+  font-size: 16px;
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
+  position: relative;
+  box-shadow: 0 0 10px rgba(180, 75, 255, 0.3);
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 6px #b44bff;
+  }
+
+  p {
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  .conteudo {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #c69eff;
+    position: relative;
+    z-index: 1;
+  }
 }
 
-.missao-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
-}
-
-.missao-card h3 {
-  font-size: 1.3rem;
-}
-
-.missao-card p {
-  line-height: 1.5;
-}
-
-.missao-card .conteudo {
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  color: #6a1b9a;
+@keyframes galaxiaGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @media (max-width: 600px) {
   .conteiner {
-    padding-bottom: 6.5rem; // espaço extra para o menu fixo não sobrepor o conteúdo
+    padding-bottom: 6.5rem;
   }
 }

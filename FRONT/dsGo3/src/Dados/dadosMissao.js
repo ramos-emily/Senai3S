@@ -3,57 +3,40 @@ export const missoes = [
     id: 1,
     titulo: "Conhecimentos Gerais",
     missao: "Advinha quem eu sou",    
-    descricao: "Pessoal, hoje vai ter prova",    
-    respostaCorreta: "Dorival",
+    descricao: "Quem fala 'SHAW!'?",    
+    respostaCorreta: "Hornet",
     status: 'disponivel' 
   },
   {
     id: 2,
     titulo: "Conhecimentos Gerais",
     missao: "Advinha quem eu sou",   
-    descricao: "A bola é minha! Essa frase é conhecida por qual professor(a)?",
-    respostaCorreta: "Marcia",
+    descricao: "Quem fala 'cebola tem camadas!'? ",
+    respostaCorreta: "Shrek",
     status: 'disponivel'
   },
   {
     id: 3,
     titulo: "Conhecimentos Gerais",
     missao: "Advinha quem eu sou",   
-    descricao: "O que é um projeto? Qual é o professor que relembra esse conceito todas vezes possíveis?",
-    respostaCorreta: "Fernanda",
+    descricao: "Vive num abacaxi e mora no mar...",
+    respostaCorreta: "Bob esponja",
     status: 'disponivel'
   },
   {
     id: 4,
     titulo: "Conhecimentos Gerais",
     missao: "Advinha quem eu sou",   
-    descricao: "Hellllowwwww Sextooouuuuuuuu, é a frase favorita de qual professor?",
-    respostaCorreta: "Mariany",
-    status: 'disponivel'
-  },
-  {
-    id: 5,
-    titulo: "Conhecimentos Gerais",
-    missao: "Advinha quem eu sou",   
-    descricao: "E agora com vocês .... os patronos do conhecimento... Vocês",
-    respostaCorreta: "Israel",
-    status: 'disponivel'
-  }
-  ,
-  {
-    id: 6,
-    titulo: "Conhecimentos Gerais",
-    missao: "Advinha quem eu sou",   
-    descricao: "Tem contraste? tem placeholder?",
-    respostaCorreta: "Mariany",
+    descricao: "Quem quer dinheiro",
+    respostaCorreta: "Silvio Santos",
     status: 'disponivel'
   },
   {
     id: 7,
     titulo: "Conhecimentos Gerais",
     missao: "O que eu sou?",   
-    descricao: "Toda tabela tem?",
-    respostaCorreta: "Chave Primaria",
+    descricao: "DICA: a emily vende",
+    respostaCorreta: "morango do nordeste",
     status: 'disponivel'
   }
   ,
@@ -61,8 +44,8 @@ export const missoes = [
     id: 8,
     titulo: "Conhecimentos Gerais",
     missao: "O que eu sou?",   
-    descricao: "Um codigo de excelecia tem .... code",
-    respostaCorreta: "Clean",
+    descricao: "DICA: a emily nao bebe",
+    respostaCorreta: "agua",
     status: 'disponivel'
   }
 ];
