@@ -1,7 +1,7 @@
-import missao from '../assets/missao_tratado.png';
-import mapa from '../assets/mapa_tratado.png';
+import missao from '../assets/mission.png';
+import mapa from '../assets/maps.png';
 import bau from '../assets/bau_tratado.png';
-import camera from '../assets/camera_tratado.png';
+import camera from '../assets/camera1.png';
 import { Link } from 'react-router-dom'
 export function Menu() {
     return (
