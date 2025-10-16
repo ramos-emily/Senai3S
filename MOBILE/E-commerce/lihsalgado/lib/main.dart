@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'cardapio.dart';
+import 'nada.dart'; // Importa a página Nada
 
 void main() {
   runApp(const MyApp());
@@ -100,7 +101,12 @@ class MyApp extends StatelessWidget {
                         width: 150,
                         height: 45,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const Nada()),
+                            );
+                          },
                           style: TextButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 168, 85, 16).withOpacity(0.3),
@@ -133,7 +139,12 @@ class MyApp extends StatelessWidget {
                         width: 150,
                         height: 45,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const Nada()),
+                            );
+                          },
                           style: TextButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 168, 85, 16).withOpacity(0.3),

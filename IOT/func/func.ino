@@ -8,27 +8,28 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 
-// ---------- CONFIGURAÇÃO ----------
-const char* ssid = "smart_city";
-const char* password = "senai501";
+// ---------- CONFIGURAÇÃO DO ACCESS POINT ----------
+const char* ssid = "ESP32-SENAI-1";
+const char* password = "12345678";
 
-#define DHTPIN 4
+// ---------- SENSOR DHT ----------
+#define DHTPIN 14
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
+// ---------- Arquivo CSV / WebServer / Preferences ----------
 #define CSV_FILE "/medicoes.csv"
 WebServer server(80);
 Preferences preferences;
 
-// ---------- VARIÁVEIS DE CONFIGURAÇÃO PERSISTENTE ----------
-int maxRegistrosConfiguravel = 500; // padrão 500 registros
+// ---------- Variáveis persistentes / de última leitura ----------
+int maxRegistrosConfiguravel = 500;  // padrão se não configurado
 
-// ---------- VARIÁVEIS DA ÚLTIMA LEITURA (em memória) ----------
 String ultimaDataHora = "N/A";
 float ultimaTemperatura = -1.0;
 float ultimaUmidade = -1.0;
 
-// ---------- Função: configurar horário com base em compilação ----------
+// ---------- Função para configurar horário com base na data/hora de compilação ----------
 void setLocalTimeFromBuild() {
   struct tm tm_build = {0};
   strptime(__DATE__ " " __TIME__, "%b %d %Y %H:%M:%S", &tm_build);
@@ -37,7 +38,7 @@ void setLocalTimeFromBuild() {
   settimeofday(&now, NULL);
 }
 
-// ---------- Funções de arquivo (SPIFFS) ----------
+// ---------- Funções de manipulação de CSV no SPIFFS ----------
 int contarLinhas() {
   File file = SPIFFS.open(CSV_FILE, FILE_READ);
   if (!file) return 0;
@@ -61,7 +62,10 @@ void removePrimeiraLinha() {
   bool primeira = true;
   while (file.available()) {
     String line = file.readStringUntil('\n');
-    if (primeira) { primeira = false; continue; }
+    if (primeira) {
+      primeira = false;
+      continue;
+    }
     tempFile.println(line);
   }
   file.close();
@@ -70,7 +74,6 @@ void removePrimeiraLinha() {
   SPIFFS.rename("/temp.csv", CSV_FILE);
 }
 
-// append com controle de limite; atualiza variáveis de última leitura
 void appendToCSVAndUpdateLast(const String &dataHora, float temp, float umid) {
   int linhas = contarLinhas();
   if (linhas >= maxRegistrosConfiguravel) {
@@ -85,14 +88,14 @@ void appendToCSVAndUpdateLast(const String &dataHora, float temp, float umid) {
   String line = dataHora + "," + String(temp, 2) + "," + String(umid, 2);
   file.println(line);
   file.close();
-  // Atualiza último em memória
+
+  // Atualiza memória
   ultimaDataHora = dataHora;
   ultimaTemperatura = temp;
   ultimaUmidade = umid;
   Serial.println("Registro adicionado: " + line);
 }
 
-// tenta ler a última linha existente no CSV
 void carregarUltimaDoCSV() {
   File file = SPIFFS.open(CSV_FILE, FILE_READ);
   if (!file) {
@@ -130,9 +133,9 @@ String getNowString() {
   return String(buf);
 }
 
-// ---------- Preferences ----------
+// ---------- Preferences (armazenamento configurável) ----------
 void carregarConfiguracoes() {
-  preferences.begin("config", true); // leitura
+  preferences.begin("config", true);
   maxRegistrosConfiguravel = preferences.getInt("max_reg", 500);
   preferences.end();
   Serial.printf("Config carregada: max_reg=%d\n", maxRegistrosConfiguravel);
@@ -144,7 +147,7 @@ void salvarMaxRegistros(int valor) {
   preferences.end();
 }
 
-// ---------- Handlers da Web (HTML) ----------
+// ---------- Handlers de rotas Web / API ----------
 void handleRoot() {
   String html = "<!DOCTYPE html><html><head><meta charset='UTF-8'>";
   html += "<meta http-equiv='refresh' content='5'>";
@@ -179,7 +182,6 @@ void handleRoot() {
   server.send(200, "text/html; charset=UTF-8", html);
 }
 
-// download CSV
 void handleDownload() {
   File file = SPIFFS.open(CSV_FILE, FILE_READ);
   if (!file) {
@@ -192,7 +194,6 @@ void handleDownload() {
   file.close();
 }
 
-// ---------- API JSON endpoints ----------
 void apiUltima() {
   String json = "{";
   json += "\"dataHora\":\"" + ultimaDataHora + "\",";
@@ -269,46 +270,57 @@ void apiConfigMaxLinhas() {
 // ---------- Setup / Loop ----------
 void setup() {
   Serial.begin(115200);
+  delay(1000);
+
+  Serial.println("\nInicializando SPIFFS...");
   if (!SPIFFS.begin(true)) {
     Serial.println("Erro ao montar SPIFFS");
-    return;
+    // Se SPIFFS falhar, ainda assim podemos tentar seguir, mas TUDO que depende de arquivos vai falhar
+  } else {
+    Serial.println("SPIFFS montado com sucesso");
   }
+
   dht.begin();
+
   carregarConfiguracoes();
+
+  // Se o arquivo não existe ainda, criar
   if (!SPIFFS.exists(CSV_FILE)) {
     File f = SPIFFS.open(CSV_FILE, FILE_WRITE);
-    if (f) f.close();
+    if (f) {
+      f.close();
+      Serial.println("Arquivo CSV criado");
+    }
   }
-  WiFi.begin(ssid, password);
-  Serial.print("Conectando à rede");
-  int tries = 0;
-  while (WiFi.status() != WL_CONNECTED && tries < 60) {
-    delay(500);
-    Serial.print(".");
-    tries++;
-  }
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("\nConectado! IP: " + WiFi.localIP().toString());
-  } else {
-    Serial.println("\nNão conectado à rede (modo offline).");
-  }
+
+  // Inicia o Access Point
+  WiFi.softAP(ssid, password);
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("Access Point iniciado. IP: ");
+  Serial.println(IP);
+
   setLocalTimeFromBuild();
   carregarUltimaDoCSV();
+
+  // Rotas HTTP e APIs
   server.on("/", handleRoot);
   server.on("/download", handleDownload);
   server.on("/api/ultima", apiUltima);
   server.on("/api/todas", apiTodas);
   server.on("/api/ler", apiLer);
   server.on("/api/config/max_linhas", HTTP_POST, apiConfigMaxLinhas);
+
   server.begin();
   Serial.println("Servidor HTTP iniciado.");
 }
 
 void loop() {
+  server.handleClient();
+
   float temp = dht.readTemperature();
   float umid = dht.readHumidity();
   String dataHora = getNowString();
   appendToCSVAndUpdateLast(dataHora, temp, umid);
+
   delay(5000);
-  server.handleClient();
 }
