@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "732901516765",
+    "project_id": "bancoapp-fb773",
+    "storage_bucket": "bancoapp-fb773.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732901516765:android:e5bdacd1deb43c764b0234",
+        "android_client_info": {
+          "package_name": "com.emisbosch.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSyAcNbZah_2FPk-NMqbGpAFr9t2zf3Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
