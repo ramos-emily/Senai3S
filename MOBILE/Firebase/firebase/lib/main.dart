@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/post.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class TelaGet extends StatefulWidget {
   const TelaGet({super.key});
 
@@ -31,7 +33,7 @@ class TelaGet extends StatefulWidget {
 }
 
 class _TelaGetState extends State<TelaGet> {
-  double? temperatura;
+  String? temperatura;
 
   @override
   void initState() {
@@ -53,14 +55,15 @@ class _TelaGetState extends State<TelaGet> {
 
   @override
   Widget build(BuildContext context) {
-    return temperatura == null ? Center(child: CircularProgressIndicator()) : 
-    Center(child: Column(children: [
+    return temperatura == null ? Center(child: CircularProgressIndicator()) :
+     Center(child: Column(children: [
       Text("$temperatura"),
       ElevatedButton(onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=> PostPage()));
-      }, child: Text("a"))
-    ],),);
+      }, child: Text("Pagina de Post"))
+     ],),);
   }
 }
+
 
 
